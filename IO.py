@@ -59,9 +59,14 @@ def read_data(filename):
 
 	result = []
 	for i in range(len(company)):
-		xlist = companyresult[i] + barnameresult[i] 
-		xlist += [ref[i]] + [reviewdata[i]] + [cocoa[i]] 
-		xlist += locationresult[i] + beantyperesult[i] + broadresult[i]
+		xlist = companyresult[i] 
+		xlist += barnameresult[i] 
+		xlist += [ref[i]] 
+		xlist += [reviewdata[i]] 
+		xlist += [cocoa[i]] 
+		xlist += locationresult[i] 
+		xlist += beantyperesult[i] 
+		xlist += broadresult[i]
 		result.append((xlist,rating[i]))
 	return result
 
