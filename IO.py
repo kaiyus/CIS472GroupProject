@@ -61,9 +61,9 @@ def read_data(filename):
 	for i in range(len(company)):
 		xlist = companyresult[i] 
 		xlist += barnameresult[i] 
-		xlist += [ref[i]] 
-		xlist += [reviewdata[i]] 
-		xlist += [cocoa[i]] 
+		xlist += [int(ref[i])] 
+		xlist += [int(reviewdata[i])] 
+		xlist += [float(cocoa[i].strip('%'))] 
 		xlist += locationresult[i] 
 		xlist += beantyperesult[i] 
 		xlist += broadresult[i]
