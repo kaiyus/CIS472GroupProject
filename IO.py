@@ -59,9 +59,10 @@ def read_data(filename):
 
 	result = []
 	for i in range(len(company)):
-		xlist = companyresult[i] 
+		xlist = []
+		xlist += companyresult[i] 
 		xlist += barnameresult[i] 
-		xlist += [int(ref[i])] 
+		# xlist += [int(ref[i])] 
 		xlist += [int(reviewdata[i])] 
 		xlist += [float(cocoa[i].strip('%'))] 
 		xlist += locationresult[i] 
