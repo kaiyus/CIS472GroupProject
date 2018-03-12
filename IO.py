@@ -109,7 +109,8 @@ def makevarnames2(data):
 
 def main(argv):
 	data = read_data(argv[0])
-	print (data)
+	print (data[10])
+	print (len(data))
                     
 if __name__ == "__main__":
 	main(sys.argv[1:])
