@@ -16,8 +16,24 @@ def rating_to_stars(rating):
 		return 2.0
 	elif (rating >= 300 ) and (rating <= 399 ):
 		return 3.0
-	else:
+	elif (rating >= 400 ) and (rating <= 499 ):
 		return 4.0
+	else:
+		return 5.0
+
+
+#def rating_to_stars(rating): 
+#	rating = int(rating)
+#	if (rating >= 0 ) and (rating <= 149 ):
+#		return 1.0
+#	elif (rating >= 150 ) and (rating <= 249 ):
+#		return 2.0
+#	elif (rating >= 250 ) and (rating <= 349 ):
+#		return 3.0
+#	elif (rating >= 350 ) and (rating <= 449 ):
+#		return 4.0
+#	else:
+#		return 5.0
 
 
 #DATA PROCESSING
