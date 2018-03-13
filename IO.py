@@ -111,6 +111,7 @@ def main(argv):
 	data = read_data(argv[0])
 	print (data[10])
 	print (len(data))
+	print 
                     
 if __name__ == "__main__":
 	main(sys.argv[1:])

@@ -5,6 +5,8 @@ import sklearn
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score
+from sklearn.preprocessing import StandardScaler
+
 
 def rating_to_stars(rating): 
 	rating = int(rating)
@@ -39,20 +41,23 @@ def rating_to_stars(rating):
 #DATA PROCESSING
 # read data in
 df = pd.read_csv("flavors_of_cacao.csv")
+
 #modified the column name
 df = df.rename(columns={'Company \n(Maker-if known)': 'CompanyName', 'Specific Bean Origin\nor Bar Name': 'BarName', 'Cocoa\nPercent': 'CocoaPercent', 'Company\nLocation': 'CompanyLocation','Bean\nType':'BeanType', 'Broad Bean\nOrigin':'BroadBeanOrigin'})
 #drop REF and Review Date
 df = df.drop(["REF","Review\nDate"],axis = 1)
-#convert string into integers OR float?
+
+#TODO:convert string into integers OR float?
 df['CocoaPercent'] = df['CocoaPercent'].str.replace('%', '')
 #df['CocoaPercent'] = df['CocoaPercent'].str.replace('.', '')
 df['CocoaPercent'] = df['CocoaPercent'].astype(float)
 
+#convert rating to intergers Since we are using classification
 df['Rating'] = (df['Rating']* 100).astype(int)
 df['Rating'] = df['Rating'].apply(rating_to_stars)
 
 
-#convert to dummies #drop REF and Review Date
+#convert to dummies
 #company = pd.get_dummies(df['CompanyName'],drop_first=True)
 company = pd.get_dummies(df['CompanyName'])
 barName = pd.get_dummies(df['BarName'])
@@ -62,26 +67,37 @@ broadBeanOrigin = pd.get_dummies(df['BroadBeanOrigin'])
 
 df = pd.concat([df, company, barName, companyLocation, beanType, broadBeanOrigin], axis = 1)
 df.drop(['CompanyName', 'BarName','CompanyLocation', 'BeanType', 'BroadBeanOrigin'], axis = 1, inplace = True )
+
+#drop duplicated columns
 df = df.loc[:,~df.columns.duplicated()]
 
 #DEBUG
 #df.info()
 #print(df.columns)
+#print(df.head(10))
 
 #TRAIN MODEL 
 
 #Split data
 X = df.drop('Rating', axis = 1) #Features
-Y = df['Rating']   # Target 
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.20, random_state=7)
+y = df['Rating']   # Target 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=7)
+
+# Scale the data to be between -1 and 1
+#scaler = StandardScaler()
+#scaler.fit(X_train)
+#X_train = scaler.transform(X_train)
+#X_test = scaler.transform(X_test)
+
+#print(X_train)
 
 #TODO: Check randomforest classifiter
 rfc = RandomForestClassifier(n_estimators=200)
-rfc.fit(X_train, Y_train)
+rfc.fit(X_train, y_train)
 rfc_pred = rfc.predict(X_test)
 
-print(classification_report(Y_test,rfc_pred))
+print(classification_report(y_test,rfc_pred))
 print("Accuracy:")
-print(accuracy_score(Y_test,rfc_pred)*100)
+print(accuracy_score(y_test,rfc_pred)*100)
 
 
