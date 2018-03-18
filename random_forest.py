@@ -4,8 +4,15 @@ import numpy as np
 import sklearn
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, accuracy_score
 from sklearn.preprocessing import StandardScaler
+#from sklearn import cross_validation
+from sklearn.model_selection import KFold
+from sklearn.model_selection import cross_val_predict
+from sklearn.model_selection import KFold, cross_val_score
+from sklearn import datasets
+
 
 
 def rating_to_stars(rating): 
@@ -92,12 +99,42 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random
 #print(X_train)
 
 #TODO: Check randomforest classifiter
-rfc = RandomForestClassifier(n_estimators=200)
-rfc.fit(X_train, y_train)
-rfc_pred = rfc.predict(X_test)
+rfc = RandomForestClassifier(n_estimators=100)
+#rfc.fit(X_train, y_train)
+#rfc_pred = rfc.predict(X_test)
 
-print(classification_report(y_test,rfc_pred))
+#digits = datasets.load_digits()
+#X_digits = digits.data
+#y_digits = digits.target
+
+k_fold = KFold(n_splits = 10)
+#for train_index, test_index in k_fold.split(X):
+	#print('Train: %s | test: %s' % (train_indices, test_indices))
+	#X_train, X_test = X[train_index],X[test_index]
+	#y_train, y_test = y[train_index],y[test_index]
+#score = [rfc.fit(X_digits[train], y_digits[train]).score(X_digits[test], y_digits[test]) for train, test in k_fold.split(X_digits)]
+
+#print(score)
+#crossvalidation = KFold(n=X.shape[0], n_folds=10,
+# shuffle=True, random_state=1)
+scores = cross_val_score(rfc, X, y, cv = k_fold)
+print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+print(scores)
+#print ‘Folds: %i, mean squared error: %.2f std: %.2f’%(len(scores),np.mean(np.abs(scores)),np.std(scores))
+
+
+#Decision tree
+dt = DecisionTreeClassifier(min_samples_leaf=20, random_state=99)
+dt.fit(X_train, y_train)
+dt_pred = dt.predict(X_test)
+#dt_pred = cross_val_predict(clf, iris.data, iris.target, cv=10)
+
+#print(classification_report(y_test,rfc_pred))
+#print("Accuracy:")
+#print(accuracy_score(y_test,rfc_pred)*100)
+
+
+print(classification_report(y_test,dt_pred))
 print("Accuracy:")
-print(accuracy_score(y_test,rfc_pred)*100)
-
+print(accuracy_score(y_test,dt_pred)*100)
 

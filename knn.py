@@ -6,6 +6,7 @@ import sklearn
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
+
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, accuracy_score
 
@@ -48,7 +49,8 @@ df = pd.read_csv("flavors_of_cacao.csv")
 #modified the column name
 df = df.rename(columns={'Company \n(Maker-if known)': 'CompanyName', 'Specific Bean Origin\nor Bar Name': 'BarName', 'Cocoa\nPercent': 'CocoaPercent', 'Company\nLocation': 'CompanyLocation','Bean\nType':'BeanType', 'Broad Bean\nOrigin':'BroadBeanOrigin'})
 #drop REF and Review Date
-df = df.drop(["REF","Review\nDate"],axis = 1)
+#df = df.drop(["REF","Review\nDate"],axis = 1)
+df = df.drop(["Review\nDate"],axis = 1)
 
 #TODO:convert string into integers OR float?
 df['CocoaPercent'] = df['CocoaPercent'].str.replace('%', '')
@@ -92,18 +94,18 @@ y = df['Rating']   # Target
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=7)
 
 # Scale the data to be between -1 and 1
-#scaler = MinMaxScaler()
-#scaler.fit(X_train)
-#X_train = scaler.transform(X_train)
-#X_test = scaler.transform(X_test)
-
-# Scale the data to be between -1 and 1
-scaler = StandardScaler()
+scaler = MinMaxScaler()
 scaler.fit(X_train)
 X_train = scaler.transform(X_train)
 X_test = scaler.transform(X_test)
 
-print(X_train[2])
+# Scale the data to be between -1 and 1
+#scaler = StandardScaler()
+#scaler.fit(X_train)
+#X_train = scaler.transform(X_train)
+#X_test = scaler.transform(X_test)
+
+#print(X_train[2])
 
 
 knn = KNeighborsClassifier(n_neighbors = 10)
@@ -112,7 +114,7 @@ knn.fit(X_train, y_train)
 knn_pred = knn.predict(X_test)
 
 print(classification_report(y_test,knn_pred))
-print("Accuracy:")
+print("st Accuracy:")
 print(accuracy_score(y_test,knn_pred)*100)
 
 
