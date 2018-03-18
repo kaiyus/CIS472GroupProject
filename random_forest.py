@@ -52,12 +52,14 @@ df = pd.read_csv("flavors_of_cacao.csv")
 #modified the column name
 df = df.rename(columns={'Company \n(Maker-if known)': 'CompanyName', 'Specific Bean Origin\nor Bar Name': 'BarName', 'Cocoa\nPercent': 'CocoaPercent', 'Company\nLocation': 'CompanyLocation','Bean\nType':'BeanType', 'Broad Bean\nOrigin':'BroadBeanOrigin'})
 #drop REF and Review Date
-df = df.drop(["REF","Review\nDate"],axis = 1)
+#df = df.drop(["REF","Review\nDate"],axis = 1)
+df = df.drop(["REF"],axis = 1)
 
 #TODO:convert string into integers OR float?
 df['CocoaPercent'] = df['CocoaPercent'].str.replace('%', '')
 #df['CocoaPercent'] = df['CocoaPercent'].str.replace('.', '')
-df['CocoaPercent'] = df['CocoaPercent'].astype(float)
+df['CocoaPercent'] = (df['CocoaPercent']).astype(float)
+
 
 #convert rating to intergers Since we are using classification
 df['Rating'] = (df['Rating']* 100).astype(int)
@@ -98,43 +100,43 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random
 
 #print(X_train)
 
-#TODO: Check randomforest classifiter
-rfc = RandomForestClassifier(n_estimators=100)
-#rfc.fit(X_train, y_train)
-#rfc_pred = rfc.predict(X_test)
+#TODO: Check randomforest Classifier
 
-#digits = datasets.load_digits()
-#X_digits = digits.data
-#y_digits = digits.target
+#Random forest Classifier without cross validation
+rfc = RandomForestClassifier(n_estimators = 200)
+rfc.fit(X_train, y_train)
+rfc_pred = rfc.predict(X_test)
+print(classification_report(y_test,rfc_pred))
+print("Accuracy:")
+print(accuracy_score(y_test,rfc_pred)*100)
 
+
+#Random forest Classifier with cross validation
+# rfc = RandomForestClassifier(n_estimators = 200)
+# k_fold = KFold(n_splits = 10)
+
+# #DEBUG
+# #for train_index, test_index in k_fold.split(X):
+# 	#print('Train: %s | test: %s' % (train_indices, test_indices))
+# 	#X_train, X_test = X[train_index],X[test_index]
+# 	#y_train, y_test = y[train_index],y[test_index]
+
+# scores = cross_val_score(rfc, X, y, cv = k_fold)
+# print("RfC Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+# print(scores)
+
+#Decision tree with cross validation
 k_fold = KFold(n_splits = 10)
-#for train_index, test_index in k_fold.split(X):
-	#print('Train: %s | test: %s' % (train_indices, test_indices))
-	#X_train, X_test = X[train_index],X[test_index]
-	#y_train, y_test = y[train_index],y[test_index]
-#score = [rfc.fit(X_digits[train], y_digits[train]).score(X_digits[test], y_digits[test]) for train, test in k_fold.split(X_digits)]
-
-#print(score)
-#crossvalidation = KFold(n=X.shape[0], n_folds=10,
-# shuffle=True, random_state=1)
-scores = cross_val_score(rfc, X, y, cv = k_fold)
-print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
-print(scores)
-#print ‘Folds: %i, mean squared error: %.2f std: %.2f’%(len(scores),np.mean(np.abs(scores)),np.std(scores))
-
-
-#Decision tree
 dt = DecisionTreeClassifier(min_samples_leaf=20, random_state=99)
 dt.fit(X_train, y_train)
 dt_pred = dt.predict(X_test)
-#dt_pred = cross_val_predict(clf, iris.data, iris.target, cv=10)
 
-#print(classification_report(y_test,rfc_pred))
+scores = cross_val_score(dt, X, y, cv = k_fold)
+print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+print(scores)
+
+#Decision tree without cross validation
+#print(classification_report(y_test,dt_pred))
 #print("Accuracy:")
-#print(accuracy_score(y_test,rfc_pred)*100)
-
-
-print(classification_report(y_test,dt_pred))
-print("Accuracy:")
-print(accuracy_score(y_test,dt_pred)*100)
+#print(accuracy_score(y_test,dt_pred)*100)
 
