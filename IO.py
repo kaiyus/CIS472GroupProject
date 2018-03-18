@@ -69,7 +69,23 @@ def read_data(filename):
 		xlist += beantyperesult[i] 
 		xlist += broadresult[i]
 		result.append((xlist,rating[i]))
+	ratecont(rating)
 	return result
+
+def ratecont(rating):
+	ratekind = []
+	for i in range(0,len(rating)):
+		if rating[i] not in ratekind:
+			ratekind.append(rating[i])
+	# print (ratekind)
+	ratekind.sort()
+	rc = [0] * len(ratekind)
+	for i in range(0,len(rating)):
+		rc[ratekind.index(rating[i])] += 1
+	# print (rc)
+	for i in range(0,len(ratekind)):
+		print (ratekind[i], "    ", rc[i])
+	return (ratekind)
 
 
 def turndataintobinary1(data, varname):
@@ -109,9 +125,9 @@ def makevarnames2(data):
 
 def main(argv):
 	data = read_data(argv[0])
-	print (data[10])
-	print (len(data))
-	print 
+	# print (data[10])
+	# print (len(data))
+	# print 
                     
 if __name__ == "__main__":
 	main(sys.argv[1:])

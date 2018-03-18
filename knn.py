@@ -108,7 +108,7 @@ X_test = scaler.transform(X_test)
 #print(X_train[2])
 
 
-knn = KNeighborsClassifier(n_neighbors = 10)
+knn = KNeighborsClassifier(n_neighbors = 5)
 knn.fit(X_train, y_train)
 
 knn_pred = knn.predict(X_test)
